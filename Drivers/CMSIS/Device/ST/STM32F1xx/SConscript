@@ -37,7 +37,7 @@ env["LINKFLAGS"] = genv["LINKFLAGS"]
 env["CFLAGS"] = genv["CFLAGS"]
 env["ASFLAGS"] = genv["ASFLAGS"]
 
-dst = "STM32F1xx_CMSIS_SYSTEM"
+dst = "STM32F1XX_CMSIS"
 src = [
     "Source/Templates/system_stm32f1xx.c", 
 ]

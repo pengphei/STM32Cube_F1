@@ -19,20 +19,17 @@ genv["CFLAGS"] += [
     "-DSTM32F103xB",
 ]
 
-# STM32F1xx_HAL_Driver library
-stm32f1xx_hal_script = '../../Drivers/STM32F1xx_HAL_Driver/SConscript'
-stm32f1xx_hal_library = SConscript(stm32f1xx_hal_script)
-genv.Install(genv["PROJECT_OUT"], stm32f1xx_hal_library)
+# STM32F1xx_HAL library
+stm32_hal_script = '../../Drivers/STM32F1xx_HAL_Driver/SConscript'
+stm32_hal_library = SConscript(stm32_hal_script)
 
-# STM32F1xx_CMSIS_SYSTEM library
-stm32f1xx_sys_script = '../../Drivers/CMSIS/Device/ST/STM32F1xx/SConscript'
-stm32f1xx_sys_library = SConscript(stm32f1xx_sys_script)
-genv.Install(genv["PROJECT_OUT"], stm32f1xx_sys_library)
+# STM32F1XX_CMSIS library
+stm32_cmsis_script = '../../Drivers/CMSIS/Device/ST/STM32F1xx/SConscript'
+stm32_cmsis_library = SConscript(stm32_cmsis_script)
 
-# STM32F1xx_FREE_RTOS library
-stm32f1xx_rtos_script = '../../Middlewares/Third_Party/FreeRTOS/SConscript'
-stm32f1xx_rtos_library = SConscript(stm32f1xx_rtos_script)
-genv.Install(genv["PROJECT_OUT"], stm32f1xx_rtos_library)
+# STM32F1XX_FREE_RTOS library
+stm32_rtos_script = '../../Middlewares/Third_Party/FreeRTOS/SConscript'
+stm32_rtos_library = SConscript(stm32_rtos_script)
 
 build_time = time.strftime("%H%M%S")
 build_date = time.strftime("%Y%m%d")
@@ -57,7 +54,7 @@ env["CFLAGS"] = genv["CFLAGS"]
 env["ASFLAGS"] = genv["ASFLAGS"]
 
 env["LINKFLAGS"] += [
-    #'-nostartfiles',
+    '-nostartfiles',
     "-TProjects/" + genv["PROJECT"] + "/" + linker_file,
 ]
 
@@ -85,9 +82,9 @@ inc = [
     genv["STM32_FREERTOS_PATH"] + "/Source/portable/GCC/ARM_CM3",
 ]
 
-dst_elf = "bitboard.elf"
-dst_bin = "bitboard.bin"
-dst_hex = "bitboard.hex"
+dst_elf = "DEMO-F103-C8T6.elf"
+dst_bin = "DEMO-F103-C8T6.bin"
+dst_hex = "DEMO-F103-C8T6.hex"
 
 src = [startup_file]
 
@@ -103,12 +100,12 @@ lib = [
     "c", 
     "m", 
     "rdimon", 
-    "STM32F1xx_HAL_Driver",
-    "STM32F1xx_CMSIS_SYSTEM",
-    "STM32F1xx_FREE_RTOS",
+    "STM32F1XX_HAL",
+    "STM32F1XX_CMSIS",
+    "STM32F1XX_FREE_RTOS",
 ]
 
 stm32_elf = env.Program(target=dst_elf, source=src, LIBS=lib, CPPPATH=inc)
 stm32_hex = env.Command(dst_hex, dst_elf, env["OBJCOPY"]+" -Oihex $SOURCE $TARGET")
 stm32_bin = env.Command(dst_bin, dst_elf, env["OBJCOPY"]+" -Obinary $SOURCE $TARGET")
-Return("stm32_elf", "stm32_hex", "stm32_bin")
+Return("stm32_hal_library", "stm32_cmsis_library", "stm32_rtos_library", "stm32_elf", "stm32_hex", "stm32_bin")

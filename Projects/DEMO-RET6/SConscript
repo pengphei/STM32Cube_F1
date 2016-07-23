@@ -18,23 +18,19 @@ genv["CFLAGS"] += [
     "-DSTM32F103xE",
 ]
 
-## root dependency
+# STM32F1xx_HAL library
+stm32_hal_script = '../../Drivers/STM32F1xx_HAL_Driver/SConscript'
+stm32_hal_library = SConscript(stm32_hal_script)
 
-# STM32F1xx_HAL_Driver libraries
-stm32f1xx_hal_script = '../../Drivers/STM32F1xx_HAL_Driver/SConscript'
-stm32f1xx_hal_library = SConscript(stm32f1xx_hal_script)
-
-# STM32F1xx_CMSIS_SYSTEM libraries
-stm32f1xx_sys_script = '../../Drivers/CMSIS/Device/ST/STM32F1xx/SConscript'
-stm32f1xx_sys_library = SConscript(stm32f1xx_sys_script)
+# STM32F1XX_CMSIS library
+stm32_cmsis_script = '../../Drivers/CMSIS/Device/ST/STM32F1xx/SConscript'
+stm32_cmsis_library = SConscript(stm32_cmsis_script)
 
 ## project building
 
 build_time = time.strftime("%H%M%S")
 build_date = time.strftime("%Y%m%d")
 build_date_time = time.strftime("%Y%m%d%H%M%S")
-
-gcc_path = "Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc"
 
 startup_file = "startup_stm32f103xe.s"
 linker_file = "STM32F103RETx_FLASH.ld"
@@ -55,7 +51,7 @@ env["CFLAGS"] = genv["CFLAGS"]
 env["ASFLAGS"] = genv["ASFLAGS"]
 
 env["LINKFLAGS"] += [
-    #'-nostartfiles',
+    '-nostartfiles',
     "-TProjects/" + genv["PROJECT"] + "/"+ linker_file,
 ]
 
@@ -78,9 +74,9 @@ inc = [
     genv["STM32_DRIVERS_PATH"] + "/CMSIS/Include",
 ]
 
-dst_elf = "demo-ret6.elf"
-dst_bin = "demo-ret6.bin"
-dst_hex = "demo-ret6.hex"
+dst_elf = "DEMO-F103-RET6.elf"
+dst_bin = "DEMO-F103-RET6.bin"
+dst_hex = "DEMO-F103-RET6.hex"
 
 src = [startup_file]
 
@@ -95,11 +91,11 @@ lib = [
     "c", 
     "m", 
     "rdimon", 
-    "STM32F1xx_HAL_Driver",
-    "STM32F1xx_CMSIS_SYSTEM",
+    "STM32F1XX_HAL",
+    "STM32F1XX_CMSIS",
 ]
 
 stm32_elf = env.Program(target=dst_elf, source=src, LIBS=lib, CPPPATH=inc)
 stm32_hex = env.Command(dst_hex, dst_elf, env["OBJCOPY"]+" -Oihex $SOURCE $TARGET")
 stm32_bin = env.Command(dst_bin, dst_elf, env["OBJCOPY"]+" -Obinary $SOURCE $TARGET")
-Return("stm32f1xx_hal_library", "stm32f1xx_sys_library", "stm32_elf", "stm32_hex", "stm32_bin")
+Return("stm32_hal_library", "stm32_cmsis_library", "stm32_elf", "stm32_hex", "stm32_bin")

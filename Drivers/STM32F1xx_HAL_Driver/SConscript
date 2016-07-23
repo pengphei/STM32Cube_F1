@@ -37,7 +37,7 @@ env["LINKFLAGS"] = genv["LINKFLAGS"]
 env["CFLAGS"] = genv["CFLAGS"]
 env["ASFLAGS"] = genv["ASFLAGS"]
 
-dst = "STM32F1xx_HAL_Driver"
+dst = "STM32F1XX_HAL"
 src = [
     "Src/stm32f1xx_hal_iwdg.c",
     "Src/stm32f1xx_hal_adc.c",

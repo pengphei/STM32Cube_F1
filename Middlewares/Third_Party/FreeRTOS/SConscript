@@ -42,7 +42,7 @@ env["LINKFLAGS"] = genv["LINKFLAGS"]
 env["CFLAGS"] = genv["CFLAGS"]
 env["ASFLAGS"] = genv["ASFLAGS"]
 
-dst = "STM32F1xx_FREE_RTOS"
+dst = "STM32F1XX_FREE_RTOS"
 
 src = [
     "Source/croutine.c",
